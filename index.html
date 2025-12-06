@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Football Quiz | كويز كرة القدم</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&family=Inter:wght@400;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="background-animation">
+        <div class="ball ball-1"></div>
+        <div class="ball ball-2"></div>
+        <div class="ball ball-3"></div>
+    </div>
+
+    <!-- Language Toggle -->
+    <button id="lang-toggle" class="lang-toggle" title="Switch Language">
+        <span class="lang-icon">🌐</span>
+        <span class="lang-text">EN</span>
+    </button>
+
+    <div class="container">
+        <!-- شاشة البداية -->
+        <div id="start-screen" class="screen active">
+            <div class="logo">
+                <img src="logo.png" alt="Football" class="logo-img">
+                <h1 data-ar="كويز كرة القدم" data-en="Football Quiz">كويز كرة القدم</h1>
+                <p class="subtitle" data-ar="اختبر معلوماتك في عالم الساحرة المستديرة"
+                    data-en="Test your knowledge in the world of football">اختبر معلوماتك في عالم الساحرة المستديرة</p>
+            </div>
+
+            <div class="settings-card">
+                <h2 data-ar="⚙️ إعدادات الكويز" data-en="⚙️ Quiz Settings">⚙️ إعدادات الكويز</h2>
+
+                <div class="api-section">
+                    <label for="api-key" data-ar="🔑 مفتاح Gemini API" data-en="🔑 Gemini API Key">🔑 مفتاح Gemini
+                        API</label>
+                    <div class="api-input-wrapper">
+                        <input type="password" id="api-key" data-placeholder-ar="أدخل مفتاح API الخاص بك"
+                            data-placeholder-en="Enter your API key" placeholder="أدخل مفتاح API الخاص بك">
+                        <button type="button" id="toggle-key" class="toggle-btn">👁️</button>
+                    </div>
+                    <a href="https://aistudio.google.com/app/apikey" target="_blank" class="api-link"
+                        data-ar="احصل على مفتاح مجاني من Google AI Studio ←"
+                        data-en="Get a free key from Google AI Studio →">
+                        احصل على مفتاح مجاني من Google AI Studio ←
+                    </a>
+                </div>
+
+                <div class="difficulty-section">
+                    <label data-ar="🎯 اختر مستوى الصعوبة" data-en="🎯 Choose Difficulty Level">🎯 اختر مستوى
+                        الصعوبة</label>
+                    <div class="difficulty-grid">
+                        <button class="difficulty-btn" data-level="very_easy" data-options="2">
+                            <span class="level-icon">😊</span>
+                            <span class="level-name" data-ar="سهل جداً" data-en="Very Easy">سهل جداً</span>
+                            <span class="level-options" data-ar="2 خيارات" data-en="2 options">2 خيارات</span>
+                        </button>
+                        <button class="difficulty-btn" data-level="easy" data-options="3">
+                            <span class="level-icon">🙂</span>
+                            <span class="level-name" data-ar="سهل" data-en="Easy">سهل</span>
+                            <span class="level-options" data-ar="3 خيارات" data-en="3 options">3 خيارات</span>
+                        </button>
+                        <button class="difficulty-btn selected" data-level="medium" data-options="4">
+                            <span class="level-icon">😐</span>
+                            <span class="level-name" data-ar="متوسط" data-en="Medium">متوسط</span>
+                            <span class="level-options" data-ar="4 خيارات" data-en="4 options">4 خيارات</span>
+                        </button>
+                        <button class="difficulty-btn" data-level="hard" data-options="4">
+                            <span class="level-icon">😤</span>
+                            <span class="level-name" data-ar="صعب" data-en="Hard">صعب</span>
+                            <span class="level-options" data-ar="4 خيارات" data-en="4 options">4 خيارات</span>
+                        </button>
+                        <button class="difficulty-btn" data-level="very_hard" data-options="5">
+                            <span class="level-icon">😰</span>
+                            <span class="level-name" data-ar="صعب جداً" data-en="Very Hard">صعب جداً</span>
+                            <span class="level-options" data-ar="5 خيارات" data-en="5 options">5 خيارات</span>
+                        </button>
+                        <button class="difficulty-btn" data-level="impossible" data-options="6">
+                            <span class="level-icon">🤯</span>
+                            <span class="level-name" data-ar="مستحيل" data-en="Impossible">مستحيل</span>
+                            <span class="level-options" data-ar="6 خيارات" data-en="6 options">6 خيارات</span>
+                        </button>
+                    </div>
+                </div>
+
+                <button id="start-btn" class="start-button">
+                    <span class="btn-text" data-ar="🚀 ابدأ الكويز" data-en="🚀 Start Quiz">🚀 ابدأ الكويز</span>
+                    <span class="btn-loader hidden">
+                        <span class="loader"></span>
+                        <span data-ar="جاري تحميل الأسئلة..." data-en="Loading questions...">جاري تحميل
+                            الأسئلة...</span>
+                    </span>
+                </button>
+            </div>
+        </div>
+
+        <!-- شاشة الكويز -->
+        <div id="quiz-screen" class="screen">
+            <!-- بطاقة النقاط في الأعلى -->
+            <div class="score-card">
+                <div class="score-item">
+                    <span class="icon">⭐</span>
+                    <span class="value" id="current-score">0</span>
+                    <span class="label" data-ar="نقطة" data-en="Points">نقطة</span>
+                </div>
+                <div class="score-item">
+                    <span class="icon">📝</span>
+                    <span class="value" id="questions-remaining">20</span>
+                    <span class="label" data-ar="متبقي" data-en="Remaining">متبقي</span>
+                </div>
+            </div>
+
+            <div class="quiz-header">
+                <button id="pause-btn" class="pause-btn" title="Pause">⏸️</button>
+                <div class="progress-info">
+                    <span id="question-counter" data-ar-template="السؤال {n} من {t}"
+                        data-en-template="Question {n} of {t}">السؤال 1 من 20</span>
+                </div>
+                <div class="progress-bar">
+                    <div id="progress-fill" class="progress-fill"></div>
+                </div>
+                <div class="timer-display">
+                    <span class="timer-icon">⏱️</span>
+                    <span id="timer">30</span>
+                </div>
+            </div>
+
+            <div class="question-card">
+                <div class="question-number" id="q-number">01</div>
+                <h2 id="question-text">...</h2>
+            </div>
+
+            <div id="options-container" class="options-container">
+                <!-- الخيارات ستظهر هنا -->
+            </div>
+
+            <div class="quiz-footer">
+                <button id="next-btn" class="next-button hidden" data-ar="السؤال التالي ←" data-en="Next Question →">
+                    السؤال التالي ←
+                </button>
+            </div>
+        </div>
+
+        <!-- نافذة الإيقاف المؤقت -->
+        <div id="pause-modal" class="pause-modal">
+            <div class="pause-content">
+                <div class="pause-icon">⏸️</div>
+                <h2 data-ar="إيقاف مؤقت" data-en="Paused">إيقاف مؤقت</h2>
+                <p data-ar="الكويز متوقف مؤقتاً" data-en="Quiz is paused">الكويز متوقف مؤقتاً</p>
+                <div class="pause-buttons">
+                    <button id="resume-btn" class="resume-btn" data-ar="▶️ استئناف" data-en="▶️ Resume">▶️
+                        استئناف</button>
+                    <button id="main-menu-btn" class="main-menu-btn" data-ar="🏠 القائمة الرئيسية"
+                        data-en="🏠 Main Menu">🏠 القائمة الرئيسية</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- شاشة النتيجة -->
+        <div id="result-screen" class="screen">
+            <div class="result-card">
+                <div class="result-animation" id="result-animation">🏆</div>
+                <h1 id="result-title" data-ar="أحسنت!" data-en="Well Done!">أحسنت!</h1>
+                <p id="result-message" data-ar="لقد أنهيت الكويز بنجاح" data-en="You successfully completed the quiz">
+                    لقد أنهيت الكويز بنجاح</p>
+
+                <div class="score-circle">
+                    <svg viewBox="0 0 100 100">
+                        <circle class="score-bg" cx="50" cy="50" r="45"></circle>
+                        <circle class="score-progress" id="score-circle" cx="50" cy="50" r="45"></circle>
+                    </svg>
+                    <div class="score-text">
+                        <span id="final-score">0</span>
+                        <span class="score-total">/20</span>
+                    </div>
+                </div>
+
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-icon">✅</span>
+                        <span class="stat-value" id="correct-count">0</span>
+                        <span class="stat-label" data-ar="صحيحة" data-en="Correct">صحيحة</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">❌</span>
+                        <span class="stat-value" id="wrong-count">0</span>
+                        <span class="stat-label" data-ar="خاطئة" data-en="Wrong">خاطئة</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">⏱️</span>
+                        <span class="stat-value" id="time-taken">0</span>
+                        <span class="stat-label" data-ar="ثانية" data-en="Seconds">ثانية</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-icon">📊</span>
+                        <span class="stat-value" id="percentage">0%</span>
+                        <span class="stat-label" data-ar="النسبة" data-en="Score">النسبة</span>
+                    </div>
+                </div>
+
+                <div class="result-actions">
+                    <button id="retry-btn" class="retry-button" data-ar="🔄 حاول مرة أخرى" data-en="🔄 Try Again">
+                        🔄 حاول مرة أخرى
+                    </button>
+                    <button id="new-quiz-btn" class="new-quiz-button" data-ar="🆕 كويز جديد" data-en="🆕 New Quiz">
+                        🆕 كويز جديد
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
